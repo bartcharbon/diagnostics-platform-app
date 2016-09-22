@@ -1,3 +1,4 @@
+import { get } from 'redux/modules/MolgenisApi'
 import { getAllGenesPresent } from './Variants'
 
 // ------------------------------------
@@ -6,8 +7,6 @@ import { getAllGenesPresent } from './Variants'
 export const SET_GN_SCORES = 'Gavin.SET_GN_SCORES'
 
 export const constants = { SET_GN_SCORES }
-
-import { get } from 'redux/modules/MolgenisApi'
 
 // ------------------------------------
 // Action creators
@@ -19,22 +18,25 @@ export function setGeneNetworkScores (phenotype, scores) {
   }
 }
 
+export const actions = { setGeneNetworkScores }
+
+// ------------------------------------
+// Thunks
+// ------------------------------------
 export function fetchGeneNetworkScores (phenotype) {
   return function (dispatch, getState) {
     const { session : {server, token} , gavin } = getState()
     const genes = getAllGenesPresent(gavin.entities).join()
-    return get(server, `v2/GeneNetworks?q=HPO_ID==${phenotype.primaryID};GENE=in=(${genes})&num=1000`, token)
+    return get(server, `v2/sys_GeneNetworkScore?q=hpo==${phenotype.primaryID};hugo=in=(${genes})&num=1000`, token)
       .then((json) => {
         const scores = {}
         json.items.forEach(function (score) {
-          scores[score.GENE] = score.SCORE
+          scores[score.hugo] = score.score
         })
         dispatch(setGeneNetworkScores(phenotype, scores))
       })
   }
 }
-
-export const actions = { setGeneNetworkScores }
 
 // ------------------------------------
 // Action Handlers
