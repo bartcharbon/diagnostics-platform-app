@@ -9,7 +9,6 @@ import { Label } from 'react-bootstrap'
 // ------------------------------------
 // Presentation components
 // ------------------------------------
-
 const propTypes = {
   phenotypes      : PropTypes.array,
   getQuery        : PropTypes.func,

@@ -22,14 +22,12 @@ export const actions = { setVariants }
 // ------------------------------------
 // Thunks
 // ------------------------------------
-export function fetchVariants () {
+export function fetchVariants (entityName) {
+  console.log('fetching variants....')
   return function (dispatch, getState) {
     const { server, token } = getState().session
-    // TODO call fetchVariants with the entity name
-    const entity = 'patient_zero';
-    return get(server, `v2/${entity}`, token).then((json) => {
+    return get(server, `v2/${entityName}`, token).then((json) => {
       const variants = json.items
-      console.log(variants)
       dispatch(setVariants(variants))
     })
   }
@@ -61,15 +59,16 @@ export const getAllGenesPresent = (state) =>
       return variant.Gene
     })
 
-// export const getSortedVariants = (state) =>
-
-
 // ------------------------------------
 // Reducer
 //
 // Reducer distributes actions to trigger state changes
 // ------------------------------------
-export default function variantReducer (state = [], action) {
+const initialState = {
+  'variants' : []
+}
+
+export default function variantReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
   return handler ? handler(state, action) : state
 }

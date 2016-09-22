@@ -4,9 +4,9 @@ import { getAllGenesPresent } from './Variants'
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const SET_GN_SCORES = 'Gavin.SET_GN_SCORES'
+export const SET_GN_SCORES = 'Gavin.SET_GN_SCORES';
 
-export const constants = { SET_GN_SCORES }
+export const constants = { SET_GN_SCORES };
 
 // ------------------------------------
 // Action creators
@@ -18,21 +18,26 @@ export function setGeneNetworkScores (phenotype, scores) {
   }
 }
 
-export const actions = { setGeneNetworkScores }
+export const actions = { setGeneNetworkScores };
 
 // ------------------------------------
 // Thunks
 // ------------------------------------
 export function fetchGeneNetworkScores (phenotype) {
   return function (dispatch, getState) {
-    const { session : {server, token} , gavin } = getState()
-    const genes = getAllGenesPresent(gavin.entities).join()
+    const { session : {server, token} , gavin } = getState();
+    const genes = getAllGenesPresent(gavin.entities).join();
     return get(server, `v2/sys_GeneNetworkScore?q=hpo==${phenotype.primaryID};hugo=in=(${genes})&num=1000`, token)
       .then((json) => {
-        const scores = {}
+        const scores = {};
         json.items.forEach(function (score) {
-          scores[score.hugo] = score.score
-        })
+          const hpoID = score.hugo;
+          const scoreValue = parseFloat(score.score);
+
+          console.log('test', hpoID, scoreValue);
+
+          scores[hpoID] = scoreValue
+        });
         dispatch(setGeneNetworkScores(phenotype, scores))
       })
   }
@@ -43,12 +48,17 @@ export function fetchGeneNetworkScores (phenotype) {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [SET_GN_SCORES] : (state, action) => {
-    const { phenotype, scores } = action.payload
-    return {
-      [phenotype.primaryID] : scores
-    }
+    const { phenotype : { primaryID }, scores } = action.payload;
+    return Object.assign({}, state, {
+      scores : [
+          ...state.scores,
+        {
+          "test" : {"gene" : 1}
+        }
+      ]
+    })
   }
-}
+};
 
 // ------------------------------------
 // Selectors
@@ -58,9 +68,9 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-export const defaultState = {}
+export const defaultState = {};
 
 export default function gavinReducer (state = defaultState, action) {
-  const handler = ACTION_HANDLERS[action.type]
+  const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state
 }
