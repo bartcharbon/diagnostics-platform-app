@@ -1,6 +1,7 @@
 import { injectReducer } from '../../store/reducers'
 import { login } from 'redux/modules/Session'
 import { searchPhenotypeOntology } from './modules/PhenotypeSelection'
+import { fetchVariants } from './modules/Variants'
 
 export default (store) => ({
   path : 'gavin',
@@ -21,6 +22,7 @@ export default (store) => ({
       store.dispatch(loginAction).then(
         () => {
           store.dispatch(searchPhenotypeOntology())
+          store.dispatch(fetchVariants())
         }
       )
 
