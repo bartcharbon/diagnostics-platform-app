@@ -22,7 +22,7 @@ export default (store) => ({
       store.dispatch(loginAction).then(
         () => {
           store.dispatch(searchPhenotypeOntology())
-          store.dispatch(fetchVariants("patient_zero"))
+          store.dispatch(fetchVariants('patient_zero'))
         }
       )
 

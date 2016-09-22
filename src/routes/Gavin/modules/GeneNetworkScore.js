@@ -4,40 +4,38 @@ import { getAllGenesPresent } from './Variants'
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const SET_GN_SCORES = 'Gavin.SET_GN_SCORES';
+export const SET_GN_SCORES = 'Gavin.SET_GN_SCORES'
 
-export const constants = { SET_GN_SCORES };
+export const constants = { SET_GN_SCORES }
 
 // ------------------------------------
 // Action creators
 // ------------------------------------
 export function setGeneNetworkScores (phenotype, scores) {
   return {
-    type : SET_GN_SCORES,
+    type    : SET_GN_SCORES,
     payload : { phenotype, scores }
   }
 }
 
-export const actions = { setGeneNetworkScores };
+export const actions = { setGeneNetworkScores }
 
 // ------------------------------------
 // Thunks
 // ------------------------------------
 export function fetchGeneNetworkScores (phenotype) {
   return function (dispatch, getState) {
-    const { session : {server, token} , gavin } = getState();
-    const genes = getAllGenesPresent(gavin.entities).join();
+    const { session : { server, token }, gavin } = getState()
+    const genes = getAllGenesPresent(gavin.entities).join()
     return get(server, `v2/sys_GeneNetworkScore?q=hpo==${phenotype.primaryID};hugo=in=(${genes})&num=1000`, token)
       .then((json) => {
-        const scores = {};
+        const scores = {}
         json.items.forEach(function (score) {
-          const hpoID = score.hugo;
-          const scoreValue = parseFloat(score.score);
-
-          console.log('test', hpoID, scoreValue);
-
+          const hpoID = score.hugo
+          // TODO: Why is this needed?
+          const scoreValue = parseFloat(score.score)
           scores[hpoID] = scoreValue
-        });
+        })
         dispatch(setGeneNetworkScores(phenotype, scores))
       })
   }
@@ -68,9 +66,9 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-export const defaultState = {};
+export const defaultState = {}
 
 export default function gavinReducer (state = defaultState, action) {
-  const handler = ACTION_HANDLERS[action.type];
+  const handler = ACTION_HANDLERS[action.type]
   return handler ? handler(state, action) : state
 }
