@@ -46,17 +46,17 @@ export function fetchGeneNetworkScores (phenotype) {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [SET_GN_SCORES] : (state, action) => {
-    const { phenotype : { primaryID }, scores } = action.payload;
-    return Object.assign({}, state, {
-      scores : [
-          ...state.scores,
-        {
-          "test" : {"gene" : 1}
-        }
-      ]
-    })
+    const { phenotype : { primaryID }, scores } = action.payload
+    return {
+      ...state,
+      scores : {
+        ...state.scores,
+        [primaryID] : scores
+      }
+    }
   }
-};
+
+}
 
 // ------------------------------------
 // Selectors
