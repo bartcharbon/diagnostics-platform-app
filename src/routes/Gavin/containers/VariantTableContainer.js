@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import { getVariantsSortedOnScore } from '../modules/Gavin'
 
 // ------------------------------------
 // Presentation components
@@ -45,6 +46,7 @@ VariantTable.propTypes = propTypes
 // Container / Presentation wrapping
 // ------------------------------------
 const mapStateToProps = (state) => {
+  getVariantsSortedOnScore(state.gavin)
   return { variants : state.gavin.entities.variants }
 }
 
