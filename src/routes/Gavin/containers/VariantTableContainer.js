@@ -5,7 +5,6 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 // ------------------------------------
 // Presentation components
 // ------------------------------------
-
 const propTypes = {
   variants : PropTypes.array
 }
@@ -15,11 +14,12 @@ class VariantTable extends Component {
     return (
       <div>
         <BootstrapTable ref='table' data={this.props.variants}>
-          <TableHeaderColumn dataField='chromosome' isKey>#CHROM</TableHeaderColumn>
-          <TableHeaderColumn dataField='position'>POS</TableHeaderColumn>
-          <TableHeaderColumn dataField='ref'>REF</TableHeaderColumn>
-          <TableHeaderColumn dataField='alt'>ALT</TableHeaderColumn>
-          <TableHeaderColumn dataField='gene'>GENE</TableHeaderColumn>
+          <TableHeaderColumn dataField='identifier' hidden={true} isKey>identifier</TableHeaderColumn>
+          <TableHeaderColumn dataField='#CHROM'>Chromosome</TableHeaderColumn>
+          <TableHeaderColumn dataField='POS'>Position</TableHeaderColumn>
+          <TableHeaderColumn dataField='REF'>Reference allele</TableHeaderColumn>
+          <TableHeaderColumn dataField='ALT'>Alternative allele</TableHeaderColumn>
+          <TableHeaderColumn dataField='Gene'>HGNC Gene</TableHeaderColumn>
         </BootstrapTable>
       </div>
     )
