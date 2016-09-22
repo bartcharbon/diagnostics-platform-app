@@ -38,9 +38,9 @@ const ACTION_HANDLERS = {
 // that can be used for other componenents
 // ------------------------------------
 export const getAllGenesPresent = (state) =>
-    state.variants.map(variant => ({
-      gene : variant.gene
-    }))
+    state.variants.map(function(variant) {
+      return variant.gene
+    })
 
 // ------------------------------------
 // Reducer

@@ -1,3 +1,5 @@
+import { getAllGenesPresent } from './Variants'
+
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -19,13 +21,13 @@ export function setGeneNetworkScores (phenotype, scores) {
 
 export function fetchGeneNetworkScores (phenotype) {
   return function (dispatch, getState) {
-    const { server, token } = getState().session
-    // TODO: Add gene filter
-    return get(server, `v2/GeneNetwork?q=hpo==${phenotype.primaryID}&num=1000`, token)
+    const { session : {server, token} , gavin } = getState()
+    const genes = getAllGenesPresent(gavin.entities).join()
+    return get(server, `v2/GeneNetworks?q=HPO_ID==${phenotype.primaryID};GENE=in=(${genes})&num=1000`, token)
       .then((json) => {
         const scores = {}
         json.items.forEach(function (score) {
-          scores[score.gene] = score.score
+          scores[score.GENE] = score.SCORE
         })
         dispatch(setGeneNetworkScores(phenotype, scores))
       })
