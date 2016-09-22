@@ -1,3 +1,5 @@
+import { get } from 'redux/modules/MolgenisApi'
+
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -18,6 +20,22 @@ export function setVariants (variants) {
 export const actions = { setVariants }
 
 // ------------------------------------
+// Thunks
+// ------------------------------------
+export function fetchVariants () {
+  return function (dispatch, getState) {
+    const { server, token } = getState().session
+    // TODO call fetchVariants with the entity name
+    const entity = 'patient_zero';
+    return get(server, `v2/${entity}`, token).then((json) => {
+      const variants = json.items
+      console.log(variants)
+      dispatch(setVariants(variants))
+    })
+  }
+}
+
+// ------------------------------------
 // Action Handlers
 //
 // Switch that defines what every action
@@ -25,8 +43,9 @@ export const actions = { setVariants }
 // ------------------------------------
 const ACTION_HANDLERS = {
   [SET_VARIANTS] : (state, action) => {
+    const variants = action.payload
     return {
-      variants : action.payload.variants
+      variants : variants
     }
   }
 }
@@ -39,31 +58,18 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 export const getAllGenesPresent = (state) =>
     state.variants.map(function(variant) {
-      return variant.gene
+      return variant.Gene
     })
+
+// export const getSortedVariants = (state) =>
+
 
 // ------------------------------------
 // Reducer
 //
 // Reducer distributes actions to trigger state changes
 // ------------------------------------
-export const defaultState = {
-  'variants' : [{
-    'chromosome' : '1',
-    'position'   : '100',
-    'ref'        : 'A',
-    'alt'        : 'T',
-    'gene'       : 'NOD2'
-  }, {
-    'chromosome' : '2',
-    'position'   : '200',
-    'ref'        : 'C',
-    'alt'        : 'G',
-    'gene'       : 'BRCA2'
-  }]
-}
-
-export default function variantReducer (state = defaultState, action) {
+export default function variantReducer (state = [], action) {
   const handler = ACTION_HANDLERS[action.type]
   return handler ? handler(state, action) : state
 }
