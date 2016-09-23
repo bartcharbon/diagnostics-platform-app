@@ -4,12 +4,13 @@ import PhenotypeSelectionContainer from '../containers/PhenotypeSelectionContain
 import VariantTableContainer from '../containers/VariantTableContainer'
 
 const propTypes = {
-  loggedIn : PropTypes.bool
+  loggedIn   : PropTypes.bool,
+  entityName : PropTypes.string
 }
 
-export const Gavin = ({ loggedIn }) => (
+export const Gavin = ({ loggedIn, entityName }) => (
   <div className={classes['Gavin']}>
-    <h4>Gavin</h4>
+    <h4>Gavin {entityName}</h4>
     {loggedIn && <div>
       <PhenotypeSelectionContainer />
       <VariantTableContainer />
