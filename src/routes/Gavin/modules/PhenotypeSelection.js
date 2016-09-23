@@ -102,7 +102,7 @@ export const getSelectedPhenotypes = (state) =>
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = { selected : [], phenotypes : {} }
+export const initialState = { selected : [], phenotypes : {} }
 export default function gavinReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 
