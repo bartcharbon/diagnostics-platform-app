@@ -72,6 +72,7 @@ const ACTION_HANDLERS = {
     const index = action.payload
     const selectedPheno = state.selected[index]
     return {
+      ...state,
       selected : [
         ...state.selected.slice(0, index),
         { ...selectedPheno, active : !selectedPheno.active },
@@ -82,6 +83,7 @@ const ACTION_HANDLERS = {
   [REMOVE_PHENOTYPE] : (state, action) => {
     const index = action.payload
     return {
+      ...state,
       selected : [
         ...state.selected.slice(0, index),
         ...state.selected.slice(index + 1)],
