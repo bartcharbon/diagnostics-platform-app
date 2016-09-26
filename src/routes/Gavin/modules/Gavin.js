@@ -19,11 +19,13 @@ export const actions = {}
 export const getSelectedPhenotypes = (state) => fromPhenotypes.getSelectedPhenotypes(state.phenotypes)
 export const getAllGenesPresent = (state) => fromVariants.getAllGenesPresent(state.entities)
 
-// TODO order table based on scores in state
 export function getVariantsSortedOnScore (state) {
-  // const variants = state.entities.variants
-  const scores = getSummedUpScorePerTerm(state.scores)
-  console.log('scores: ', scores)
+  const summedScores = getSummedUpScorePerTerm(state.scores.scores)
+  return state.entities.variants.map(element => {
+    return {...element, totalScore:summedScores[element["Gene"]]};
+  }).sort(function(item1, item2) {
+    return parseFloat(item2["totalScore"]) - parseFloat(item1["totalScore"]);
+  });
 }
 
 function getSummedUpScorePerTerm (scores) {
@@ -34,7 +36,6 @@ function getSummedUpScorePerTerm (scores) {
 
     const genes = scores[hpoID]
     for (var gene in genes) {
-            // console.log('existing', summedScores[gene])
       const score = genes[gene]
 
       if (summedScores[gene] === undefined) {
@@ -45,7 +46,6 @@ function getSummedUpScorePerTerm (scores) {
       }
     }
   }
-
   return summedScores
 }
 
