@@ -12,8 +12,9 @@ import Gavin from '../components/Gavin'
 
 const mapActionCreators = {}
 
-const mapStateToProps = (state) => ({
-  loggedIn : state.session.token
+const mapStateToProps = (state, ownProps) => ({
+  loggedIn   : state.session.token,
+  entityName : ownProps.params.entityName
 })
 
 /*  Note: mapStateToProps is where you should use `reselect` to create selectors, ie:
