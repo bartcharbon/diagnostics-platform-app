@@ -22,10 +22,10 @@ export const getAllGenesPresent = (state) => fromVariants.getAllGenesPresent(sta
 export function getVariantsSortedOnScore (state) {
   const summedScores = getSummedUpScorePerTerm(state.scores.scores)
   return state.entities.variants.map(element => {
-    return {...element, totalScore:summedScores[element["Gene"]]};
-  }).sort(function(item1, item2) {
-    return parseFloat(item2["totalScore"]) - parseFloat(item1["totalScore"]);
-  });
+    return { ...element, totalScore : summedScores[element['Gene']] }
+  }).sort(function (item1, item2) {
+    return parseFloat(item2['totalScore']) - parseFloat(item1['totalScore'])
+  })
 }
 
 function getSummedUpScorePerTerm (scores) {
