@@ -66,7 +66,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-export const defaultState = {}
+export const defaultState = { scores : {} }
 
 export default function gavinReducer (state = defaultState, action) {
   const handler = ACTION_HANDLERS[action.type]

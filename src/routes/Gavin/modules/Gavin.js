@@ -17,13 +17,13 @@ export const actions = {}
 // Selectors
 // ------------------------------------
 export const getSelectedPhenotypes = (state) => fromPhenotypes.getSelectedPhenotypes(state.phenotypes)
+export const getActivePhenotypes = (state) => fromPhenotypes.getActivePhenotypes(state.phenotypes)
 export const getAllGenesPresent = (state) => fromVariants.getAllGenesPresent(state.entities)
 
 export function getVariantsSortedOnScore (state) {
-  const summedScores = getSummedUpScorePerTerm(state.scores.scores)
-  console.log(summedScores);
+  const totalScorePerGene = _getTotalScorePerGene(state)
   return state.entities.variants.map(element => {
-    return { ...element, totalScore : summedScores[element['Gene']] }
+    return { ...element, totalScore : totalScorePerGene[element.Gene] }
   }).sort(function (item1, item2) {
     // cope with undefined scores
     var value2 = item2.totalScore
@@ -47,25 +47,38 @@ export function getVariantsSortedOnScore (state) {
   })
 }
 
-function getSummedUpScorePerTerm (scores) {
-  const summedScores = {}
+/**
+ * Retrieves the total score for each gene, per gene
+ * @param state
+ * @returns object mapping key gene name to value total score for that gene name
+ * @private
+ */
+function _getTotalScorePerGene (state) {
+  const phenos = getActivePhenotypes(state)
+  const genes = getAllGenesPresent(state)
+  const scores = state.scores.scores
+  return genes.reduce((soFar, gene) => ({
+    ...soFar,
+    [gene] : _getTotalScoreForGene(gene, phenos, scores)
+  }), {})
+}
 
-  for (var hpoID in scores) {
-       //  console.log('term', hpoID)
-
-    const genes = scores[hpoID]
-    for (var gene in genes) {
-      const score = genes[gene]
-
-      if (summedScores[gene] === undefined) {
-        summedScores[gene] = score
-      } else {
-                // console.log('summed', gene)
-        summedScores[gene] = summedScores[gene] + score
-      }
+/**
+ * Sums all gene network scores for a gene
+ * @param gene the gene to sum the scores for
+ * @param phenos the phenotypes whose scores should be summed
+ * @param scores the scores per phenotype and gene
+ * @returns summed scores for all selected phenotypes for this gene
+ * or undefined if for one or more of the phenotypes no score was found for this gene
+ * @private
+ */
+function _getTotalScoreForGene (gene, phenos, scores) {
+  return phenos.reduce((total, pheno) => {
+    if (!scores.hasOwnProperty(pheno) || !scores[pheno].hasOwnProperty(gene) || total === undefined) {
+      return undefined
     }
-  }
-  return summedScores
+    return total + scores[pheno][gene]
+  }, 0)
 }
 
 // ------------------------------------
