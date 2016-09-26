@@ -4,7 +4,7 @@ import { searchPhenotypeOntology } from './modules/PhenotypeSelection'
 import { fetchVariants } from './modules/Variants'
 
 export default (store) => ({
-  path : 'gavin',
+  path : '/gavin/:entityName',
   /*  Async getComponent is only invoked when route matches   */
   getComponent (nextState, cb) {
     /*  Webpack - use 'require.ensure' to create a split point
@@ -22,7 +22,7 @@ export default (store) => ({
       store.dispatch(loginAction).then(
         () => {
           store.dispatch(searchPhenotypeOntology())
-          store.dispatch(fetchVariants())
+          store.dispatch(fetchVariants(nextState.params.entityName))
         }
       )
 
