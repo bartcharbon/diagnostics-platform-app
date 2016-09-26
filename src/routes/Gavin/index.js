@@ -18,13 +18,19 @@ export default (store) => ({
       /*  Add the reducer to the store on key 'gavin'  */
       injectReducer(store, { key : 'gavin', reducer })
 
-      const loginAction = login({ apiUrl : 'http://localhost:8080/api/' }, 'admin', 'admin')
-      store.dispatch(loginAction).then(
-        () => {
-          store.dispatch(searchPhenotypeOntology())
-          store.dispatch(fetchVariants(nextState.params.entityName))
-        }
-      )
+      const state = store.getState()
+      if (!state.session || !state.session.server || !state.session.server.apiUrl) {
+        const loginAction = login({ apiUrl : 'http://localhost:8080/api/' }, 'admin', 'admin')
+        store.dispatch(loginAction).then(
+          () => {
+            store.dispatch(searchPhenotypeOntology())
+            store.dispatch(fetchVariants(nextState.params.entityName))
+          }
+        )
+      } else {
+        store.dispatch(searchPhenotypeOntology())
+        store.dispatch(fetchVariants(nextState.params.entityName))
+      }
 
       /*  Return getComponent   */
       cb(null, Gavin)
