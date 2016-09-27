@@ -7,13 +7,13 @@ describe('(Redux) Gavin', () => {
       const items = [
         {id: 1, totalScore: 12},
         {id: 2, totalScore: undefined},
-        {id: 3, totalScore: 2},
+        {id: 3, totalScore: -2},
         {id:4, totalScore: 8}]
       items.sort(sortVariants)
       const expected = [
         {id: 1, totalScore: 12},
         {id:4, totalScore: 8},
-        {id: 3, totalScore: 2},
+        {id: 3, totalScore: -2},
         {id: 2, totalScore: undefined}
       ]
       expect(items).to.eql(expected)
