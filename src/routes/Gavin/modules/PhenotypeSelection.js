@@ -43,7 +43,7 @@ export function removePhenotype (index) {
 export function searchPhenotypeOntology () {
   return (dispatch, getState) => {
     const { server, token } = getState().session
-    return get(server, 'v2/sys_ont_Ontology?ontologyName==hp', token).then(
+    return get(server, 'v2/sys_ont_Ontology?q=ontologyName==hp', token).then(
       (json) => {
         dispatch(phenotypeOntologyFound(json.items[0].id))
       }
