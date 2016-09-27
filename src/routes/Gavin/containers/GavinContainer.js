@@ -13,7 +13,7 @@ import Gavin from '../components/Gavin'
 const mapActionCreators = {}
 
 const mapStateToProps = (state, ownProps) => ({
-  loggedIn   : state.session.token,
+  loggedIn   : state.session !== undefined,
   entityName : ownProps.params.entityName
 })
 
