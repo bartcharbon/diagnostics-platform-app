@@ -13,7 +13,11 @@ function callApi (server, uri, method, token) {
   }
 
   if (token) {
+    // for cross-origin requests, use a molgenis token
     settings.headers = { ...contentHeaders, 'x-molgenis-token' : token }
+  } else {
+    // for same origin requests, use the JSESSIONID cookie
+    settings.credentials = 'same-origin'
   }
 
   return fetch(url, settings)

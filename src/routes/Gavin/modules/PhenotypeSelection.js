@@ -101,6 +101,8 @@ export const getSelectedPhenotypes = (state) =>
     value  : state.phenotypes[pheno.id]
   }))
 
+export const getActivePhenotypes = (state) => state.selected.filter(pheno => pheno.active).map(pheno => pheno.id)
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
