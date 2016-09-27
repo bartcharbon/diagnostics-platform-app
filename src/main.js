@@ -19,7 +19,7 @@ const initialState = window.___INITIAL_STATE__
 // Browser History Setup
 // ========================================================
 const browserHistory = useRouterHistory(createBrowserHistory)({
-  basename : initialState.baseUrl || __BASENAME__
+  basename : (initialState && initialState.baseUrl) || __BASENAME__
 })
 
 const store = createStore(initialState, browserHistory)
