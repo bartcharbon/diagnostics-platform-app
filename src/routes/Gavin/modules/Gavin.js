@@ -25,25 +25,7 @@ export function getVariantsSortedOnScore (state) {
   return state.entities.variants.map(element => {
     return { ...element, totalScore : totalScorePerGene[element.Gene] }
   }).sort(function (item1, item2) {
-    // cope with undefined scores
-    var value2 = item2.totalScore
-    var value1 = item1.totalScore
-    if (value1 === undefined) {
-      if (value2 === undefined) {
-        return 0
-      }
-      return 1
-    }
-    if (value2 === undefined) {
-      return -1
-    }
-    if (value2 > value1) {
-      return 1
-    }
-    if (value2 < value1) {
-      return -1
-    }
-    return 0
+    return sortVariants(item1, item2)
   })
 }
 
@@ -81,6 +63,19 @@ function _getTotalScoreForGene (gene, phenos, scores) {
   }, 0)
 }
 
+function sortVariants (item1, item2) {
+  // cope with undefined scores
+  var value2 = item2.totalScore
+  var value1 = item1.totalScore
+  if (value1 === undefined) {
+    if (value2 === undefined) return 0
+    return 1
+  }
+  if (value2 === undefined) return -1
+  if (value2 > value1) return 1
+  if (value2 < value1) return -1
+  return 0
+}
 // ------------------------------------
 // Action Handlers
 // ------------------------------------

@@ -15,7 +15,7 @@ class VariantTable extends Component {
     return (
       <div>
         <hr />
-        <BootstrapTable ref='table' data={this.props.variants} search >
+        <BootstrapTable ref='table' data={this.props.variants}>
           <TableHeaderColumn dataField='identifier' hidden isKey>identifier</TableHeaderColumn>
           <TableHeaderColumn dataField='#CHROM'>Chromosome</TableHeaderColumn>
           <TableHeaderColumn dataField='POS'>Position</TableHeaderColumn>
