@@ -18,8 +18,8 @@ class SelectedPhenotypes extends Component {
             onChange={() => togglePhenotype(index)}>
             {pheno.value.name}
           </Checkbox>
-          <Glyphicon key={index} glyph='remove' onClick={() => removePhenotype(index)} />
-            </span>
+            <Glyphicon key={index} glyph='remove' onClick={() => removePhenotype(index)} />
+          </span>
           )}
         </FormGroup>
       </form>
