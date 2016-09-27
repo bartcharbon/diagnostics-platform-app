@@ -1,9 +1,7 @@
-import {combineReducers} from "redux";
-import phenotypes from "./PhenotypeSelection";
-import * as fromPhenotypes from "./PhenotypeSelection";
-import scores from "./GeneNetworkScore";
-import entities from "./Variants";
-import * as fromVariants from "./Variants";
+import { combineReducers } from 'redux'
+import phenotypes, * as fromPhenotypes from './PhenotypeSelection'
+import scores from './GeneNetworkScore'
+import entities, * as fromVariants from './Variants'
 
 // ------------------------------------
 // Constants
@@ -22,12 +20,12 @@ export const getSelectedPhenotypes = (state) => fromPhenotypes.getSelectedPhenot
 export const getActivePhenotypes = (state) => fromPhenotypes.getActivePhenotypes(state.phenotypes)
 export const getAllGenesPresent = (state) => fromVariants.getAllGenesPresent(state.entities)
 
-export function getVariantsSortedOnScore(state) {
+export function getVariantsSortedOnScore (state) {
   const totalScorePerGene = _getTotalScorePerGene(state)
   return state.entities.variants.map(element => {
-    return {...element, totalScore: totalScorePerGene[element.Gene]}
+    return { ...element, totalScore : totalScorePerGene[element.Gene] }
   }).sort(function (item1, item2) {
-    return sortVariants(item1, item2);
+    return sortVariants(item1, item2)
   })
 }
 
@@ -37,13 +35,13 @@ export function getVariantsSortedOnScore(state) {
  * @returns object mapping key gene name to value total score for that gene name
  * @private
  */
-function _getTotalScorePerGene(state) {
+function _getTotalScorePerGene (state) {
   const phenos = getActivePhenotypes(state)
   const genes = getAllGenesPresent(state)
   const scores = state.scores.scores
   return genes.reduce((soFar, gene) => ({
     ...soFar,
-    [gene]: _getTotalScoreForGene(gene, phenos, scores)
+    [gene] : _getTotalScoreForGene(gene, phenos, scores)
   }), {})
 }
 
@@ -56,7 +54,7 @@ function _getTotalScorePerGene(state) {
  * or undefined if for one or more of the phenotypes no score was found for this gene
  * @private
  */
-function _getTotalScoreForGene(gene, phenos, scores) {
+function _getTotalScoreForGene (gene, phenos, scores) {
   return phenos.reduce((total, pheno) => {
     if (!scores.hasOwnProperty(pheno) || !scores[pheno].hasOwnProperty(gene) || total === undefined) {
       return undefined
@@ -65,17 +63,17 @@ function _getTotalScoreForGene(gene, phenos, scores) {
   }, 0)
 }
 
-function sortVariants(item1, item2) {
+function sortVariants (item1, item2) {
   // cope with undefined scores
   var value2 = item2.totalScore
   var value1 = item1.totalScore
   if (value1 === undefined) {
-    if (value2 === undefined)return 0
+    if (value2 === undefined) return 0
     return 1
   }
-  if (value2 === undefined)return -1
-  if (value2 > value1)return 1
-  if (value2 < value1)return -1
+  if (value2 === undefined) return -1
+  if (value2 > value1) return 1
+  if (value2 < value1) return -1
   return 0
 }
 // ------------------------------------
@@ -83,6 +81,6 @@ function sortVariants(item1, item2) {
 // ------------------------------------
 // const ACTION_HANDLERS = {}
 
-export const reducer = combineReducers({phenotypes, scores, entities})
+export const reducer = combineReducers({ phenotypes, scores, entities })
 
 export default reducer

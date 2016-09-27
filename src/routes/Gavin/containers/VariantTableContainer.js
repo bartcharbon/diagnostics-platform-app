@@ -1,17 +1,17 @@
-import React, {Component, PropTypes} from "react";
-import {connect} from "react-redux";
-import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import {getVariantsSortedOnScore} from "../modules/Gavin";
+import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import { getVariantsSortedOnScore } from '../modules/Gavin'
 
 // ------------------------------------
 // Presentation components
 // ------------------------------------
 const propTypes = {
-  variants: PropTypes.array
+  variants : PropTypes.array
 }
 
 class VariantTable extends Component {
-  render() {
+  render () {
     return (
       <div>
         <hr />
@@ -35,7 +35,7 @@ VariantTable.propTypes = propTypes
 // Container / Presentation wrapping
 // ------------------------------------
 const mapStateToProps = (state) => {
-  return {variants: getVariantsSortedOnScore(state.gavin)}
+  return { variants : getVariantsSortedOnScore(state.gavin) }
 }
 
 const mapDispatchToProps = {}
