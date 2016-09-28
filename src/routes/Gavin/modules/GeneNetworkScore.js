@@ -1,5 +1,6 @@
 import { get } from 'redux/modules/MolgenisApi'
 import { getAllGenesPresent } from './Variants'
+import { showAlert } from 'redux/modules/Alerts'
 
 // ------------------------------------
 // Constants
@@ -30,11 +31,12 @@ export function fetchGeneNetworkScores (phenotype) {
     return get(server, `v2/sys_GeneNetworkScore?q=hpo==${phenotype.primaryID};hugo=in=(${genes})&num=1000`, token)
       .then((json) => {
         const scores = {}
+        if (json.items.length === 0) {
+          dispatch(showAlert('warning', 'No Gene Network scores were found for phenotype[' + phenotype.name + '(' + phenotype.primaryID + ')]', 'Unable to determine gene priority order'))
+        }
         json.items.forEach(function (score) {
-          const hpoID = score.hugo
-          // TODO: Why is this needed?
-          const scoreValue = parseFloat(score.score)
-          scores[hpoID] = scoreValue
+          const geneID = score.hugo
+          scores[geneID] = score.score
         })
         dispatch(setGeneNetworkScores(phenotype, scores))
       })
