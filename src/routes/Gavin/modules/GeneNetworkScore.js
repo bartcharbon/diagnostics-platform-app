@@ -39,6 +39,12 @@ export function fetchGeneNetworkScores (phenotype) {
           scores[geneID] = score.score
         })
         dispatch(setGeneNetworkScores(phenotype, scores))
+      }).catch((error) => {
+        var message = ''
+        if (error.errors[0] !== undefined) {
+          message = error.errors[0].message
+        }
+        dispatch(showAlert('danger', 'Error retrieving Gene Network scores from the server', message))
       })
   }
 }
