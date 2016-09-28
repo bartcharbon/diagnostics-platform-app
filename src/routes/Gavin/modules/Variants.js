@@ -1,4 +1,5 @@
 import { get } from 'redux/modules/MolgenisApi'
+import { showAlert } from 'redux/modules/Alerts';
 
 // ------------------------------------
 // Constants
@@ -29,6 +30,13 @@ export function fetchVariants (entityName) {
     return get(server, `v2/${entityName}`, token).then((json) => {
       const variants = json.items
       dispatch(setVariants(variants))
+    }).catch((error) => {
+      var message = ""
+      if(error.errors[0]!==undefined){
+        message = error.errors[0].message
+      }
+      dispatch(showAlert('danger', 'Error retrieving entity['+entityName+'] from the server', message));
+      console.log(error);
     })
   }
 }
