@@ -24,10 +24,12 @@ export const actions = { setVariants }
 // Thunks
 // ------------------------------------
 export function fetchVariants (entityName) {
-  console.log('fetching variants....')
   return function (dispatch, getState) {
     const { server, token } = getState().session
     return get(server, `v2/${entityName}`, token).then((json) => {
+      var attrNames = json.meta.attributes.map(function (attr) { return attr.name })
+      var missing = ['#CHROM', 'POS', 'REF', 'ALT', 'Gene'].map(function (attr) { if (attrNames.indexOf(attr) === -1) return attr })
+      if (missing.length > 0) dispatch(showAlert('danger', 'Entity [' + entityName + '] is missing required attributes', missing.join(', ')))
       const variants = json.items
       dispatch(setVariants(variants))
     }).catch((error) => {
@@ -36,7 +38,6 @@ export function fetchVariants (entityName) {
         message = error.errors[0].message
       }
       dispatch(showAlert('danger', 'Error retrieving entity[' + entityName + '] from the server', message))
-      console.log(error)
     })
   }
 }
