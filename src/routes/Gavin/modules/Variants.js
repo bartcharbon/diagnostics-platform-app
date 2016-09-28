@@ -23,7 +23,6 @@ export const actions = { setVariants }
 // Thunks
 // ------------------------------------
 export function fetchVariants (entityName) {
-  console.log('fetching variants....')
   return function (dispatch, getState) {
     const { server, token } = getState().session
     return get(server, `v2/${entityName}`, token).then((json) => {

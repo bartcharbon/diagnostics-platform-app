@@ -1,4 +1,10 @@
+import { get } from 'redux/modules/MolgenisApi'
+import { fetchGeneNetworkScores } from './GeneNetworkScore'
+import { showAlert } from 'redux/modules/Alerts'
+
+// ------------------------------------
 // Constants
+// ------------------------------------
 export const PHENOTYPE_SELECTED = 'Gavin.PHENOTYPE_SELECTED'
 export const TOGGLE_PHENOTYPE = 'Gavin.TOGGLE_PHENOTYPE'
 export const REMOVE_PHENOTYPE = 'Gavin.REMOVE_PHENOTYPE'
@@ -6,13 +12,9 @@ export const PHENOTYPE_ONTOLOGY_FOUND = 'Gavin.PHENOTYPE_ONTOLOGY_FOUND'
 
 export const constants = { PHENOTYPE_SELECTED, TOGGLE_PHENOTYPE, REMOVE_PHENOTYPE }
 
-import { get } from 'redux/modules/MolgenisApi'
-import { fetchGeneNetworkScores } from './GeneNetworkScore'
-import { showAlert } from 'redux/modules/Alerts'
-
-// Action Creators
-
-// A phenotype was selected and should be added to the selection
+// ------------------------------------
+// Action creators
+// ------------------------------------
 export function phenotypeSelected (phenotype) {
   return {
     type    : PHENOTYPE_SELECTED,
@@ -41,6 +43,16 @@ export function removePhenotype (index) {
   }
 }
 
+export const phenotypeOntologyFound = (id) => ({
+  type    : PHENOTYPE_ONTOLOGY_FOUND,
+  payload : id
+})
+
+export const actions = { selectPhenotype, togglePhenotype, removePhenotype, phenotypeOntologyFound }
+
+// ------------------------------------
+// Thunks
+// ------------------------------------
 export function searchPhenotypeOntology () {
   return (dispatch, getState) => {
     const { server, token } = getState().session
@@ -57,13 +69,9 @@ export function searchPhenotypeOntology () {
   }
 }
 
-export const phenotypeOntologyFound = (id) => ({
-  type    : PHENOTYPE_ONTOLOGY_FOUND,
-  payload : id
-})
-
-export const actions = { selectPhenotype, togglePhenotype, removePhenotype, phenotypeOntologyFound }
-
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
 const ACTION_HANDLERS = {
   [PHENOTYPE_ONTOLOGY_FOUND] : (state, action) => (
   { ...state, ontologyId : action.payload }
@@ -113,6 +121,5 @@ export const getActivePhenotypes = (state) => state.selected.filter(pheno => phe
 export const initialState = { selected : [], phenotypes : {} }
 export default function gavinReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
-
   return handler ? handler(state, action) : state
 }

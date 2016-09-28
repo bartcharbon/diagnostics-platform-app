@@ -8,7 +8,6 @@ const propTypes = {
 class Phenotype extends Component {
   render () {
     const { phenotype: { name, synonyms, primaryID } } = this.props
-    console.log(this.props)
     return (
       <ListItem>
         <h4>{name} ({primaryID})</h4>
