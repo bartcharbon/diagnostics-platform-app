@@ -14,11 +14,13 @@ class SelectedPhenotypes extends Component {
       Selected phenotypes:
       <form>
         <FormGroup>
-          {phenotypes.map((pheno, index) => <span><Checkbox key={index} inline checked={pheno.active}
+          {phenotypes.map((pheno, index) => <span key={index}><Checkbox inline checked={pheno.active}
             onChange={() => togglePhenotype(index)}>
             {pheno.value.name}
-          </Checkbox>
-            <Glyphicon key={index} glyph='remove' onClick={() => removePhenotype(index)} />
+          </Checkbox>&nbsp;
+            <small>
+              <Glyphicon glyph='remove' onClick={() => removePhenotype(index)} />
+            </small>&nbsp;&nbsp;&nbsp;
           </span>
           )}
         </FormGroup>

@@ -63,7 +63,7 @@ function _getTotalScoreForGene (gene, phenos, scores) {
   }, 0)
 }
 
-function sortVariants (item1, item2) {
+export function sortVariants (item1, item2) {
   // cope with undefined scores
   var value2 = item2.totalScore
   var value1 = item1.totalScore

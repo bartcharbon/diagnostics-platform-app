@@ -7,13 +7,6 @@ import createStore from './store/createStore'
 import AppContainer from './containers/AppContainer'
 
 // ========================================================
-// Browser History Setup
-// ========================================================
-const browserHistory = useRouterHistory(createBrowserHistory)({
-  basename : __BASENAME__
-})
-
-// ========================================================
 // Store and History Instantiation
 // ========================================================
 // Create redux store and sync with react-router-redux. We have installed the
@@ -21,6 +14,14 @@ const browserHistory = useRouterHistory(createBrowserHistory)({
 // so we need to provide a custom `selectLocationState` to inform
 // react-router-redux of its location.
 const initialState = window.___INITIAL_STATE__
+
+// ========================================================
+// Browser History Setup
+// ========================================================
+const browserHistory = useRouterHistory(createBrowserHistory)({
+  basename : (initialState && initialState.baseUrl) || __BASENAME__
+})
+
 const store = createStore(initialState, browserHistory)
 const history = syncHistoryWithStore(browserHistory, store, {
   selectLocationState : (state) => state.router

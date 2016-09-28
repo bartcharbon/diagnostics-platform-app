@@ -8,6 +8,7 @@ export const constants = { PHENOTYPE_SELECTED, TOGGLE_PHENOTYPE, REMOVE_PHENOTYP
 
 import { get } from 'redux/modules/MolgenisApi'
 import { fetchGeneNetworkScores } from './GeneNetworkScore'
+import { showAlert } from 'redux/modules/Alerts'
 
 // Action Creators
 
@@ -43,10 +44,15 @@ export function removePhenotype (index) {
 export function searchPhenotypeOntology () {
   return (dispatch, getState) => {
     const { server, token } = getState().session
-    return get(server, 'v2/sys_ont_Ontology?ontologyName==hp', token).then(
+    return get(server, 'v2/sys_ont_Ontology?q=ontologyName==hp', token).then(
       (json) => {
-        dispatch(phenotypeOntologyFound(json.items[0].id))
-      }
+        if (json.items.length > 0) {
+          dispatch(phenotypeOntologyFound(json.items[0].id))
+        } else {
+          dispatch(showAlert('danger', 'No ontology found with name "hp".', 'Have you imported hpo.owl.zip?'))
+        }
+      },
+      (error) => dispatch(showAlert('danger', 'Failed to download ontology with name "hp".', error.message))
     )
   }
 }

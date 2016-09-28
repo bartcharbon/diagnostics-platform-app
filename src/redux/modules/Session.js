@@ -1,5 +1,6 @@
 // This is a duck, it contains actions and reducers for the session part of the state tree
 import MolgenisApi from './MolgenisApi'
+import { showAlert } from './Alerts'
 
 // Constants
 export const VERSION_RETRIEVED = 'VERSION_RETRIEVED'
@@ -17,16 +18,18 @@ export function login (server, username, password) {
   // this action is a thunk, it resolves a promise and then dispatches a new action
   // it accepts the dispatch method as a parameter
   return function (dispatch) {
-    return MolgenisApi.login(server, username, password).then(
-      loginResponse => {
+    return MolgenisApi
+      .login(server, username, password)
+      .then((loginResponse) => {
         if (!loginResponse.token) {
           dispatch(loginFailed(loginResponse.errors[0].message))
         } else {
           dispatch(getVersion(server))
           dispatch(loggedIn({ server : server, ...loginResponse }))
         }
-      }
-    )
+      }, (error) => {
+        dispatch(showAlert('danger', 'Login failed!', error.message))
+      })
   }
 }
 
