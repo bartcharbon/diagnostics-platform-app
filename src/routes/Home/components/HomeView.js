@@ -1,14 +1,17 @@
 import React from 'react'
-import DuckImage from '../assets/Duck.jpg'
 import classes from './HomeView.scss'
+import UploadForm from 'components/UploadForm'
 
 export const HomeView = () => (
   <div>
     <h4>Welcome!</h4>
-    <img
-      alt='This is a duck, because Redux!'
-      className={classes.duck}
-      src={DuckImage} />
+    <p>Upload your VCF file with gene annotations</p>
+    <UploadForm
+      width={6}
+      showAction={false}
+      validExtensions={['vcf', 'xlsx', 'xls', 'vcf.gz']}
+      onSubmit={(x) => { console.log('onSubmit', x) }}
+    />
   </div>
 )
 
