@@ -36,7 +36,13 @@ export function fetchGeneNetworkScores (phenotype) {
         }
         json.items.forEach(function (score) {
           const geneID = score.hugo
-          scores[geneID] = score.score
+          if(scores.hasOwnProperty(geneID)){
+            console.log(scores)
+            dispatch(showAlert('warning', 'More than one Gene Network score found for combination of gene[' + geneID + ')] and phenotype[' + phenotype.primaryID + ')]', ''))
+            scores[geneID] = undefined;
+          }else {
+            scores[geneID] = score.score
+          }
         })
         dispatch(setGeneNetworkScores(phenotype, scores))
       }).catch((error) => {
