@@ -1,11 +1,11 @@
 import React from 'react'
 import { IndexLink, Link } from 'react-router'
 import classes from './Header.scss'
-import Alerts from '../../containers/Alerts'
+import AlertsContainer from '../../containers/AlertsContainer'
 
 export const Header = () => (
   <div>
-    <Alerts />
+    <AlertsContainer />
     <h1>Genetics Diagnostics App</h1>
     <IndexLink to='/' activeClassName={classes.activeRoute}>
       Home
