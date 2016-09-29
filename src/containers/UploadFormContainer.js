@@ -111,7 +111,7 @@ class UploadFormContainer extends Component {
     data.append('entityName', this.state.fileName)
     data.append('action', this.state.action)
     data.append('notify', false)
-    this.props.importFile(data, this.props.token)
+    this.props.importFile(data)
   }
 
   render () {
@@ -130,6 +130,6 @@ UploadFormContainer.propTypes = { ...propTypes, importFile : PropTypes.func }
 /**
  * Then connect it to the dispatcher
  */
-const mapStateToProps = (state, ownProps) => ({ ...ownProps, token : state.session.token })
+const mapStateToProps = (state, ownProps) => (ownProps)
 const mapDispatchToProps = { importFile }
 export default connect(mapStateToProps, mapDispatchToProps)(UploadFormContainer)

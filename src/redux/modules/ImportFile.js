@@ -7,16 +7,17 @@ const UPDATE_JOB = 'UPDATE_JOB'
 export const constants = { START_IMPORT, UPDATE_JOB }
 
 // Action Creators
-export function importFile (file, server, token) {
+export function importFile (file) {
   return (dispatch, getState) => {
+    const token = getState().session.token
     submitForm('http://localhost:8080/plugin/importwizard/importFile', 'post', file, token).then((response) => {
       response.json().then(jobHref => {
         dispatch(startImport(jobHref))
-        get(getState().session.server, 'http://localhost:8080' + jobHref, token).then(
-          (response) => response.json().then(
-            (json) => console.log('Job status: ', json)
-          )
-        )
+        // get(getState().session.server, jobHref, token).then(
+        //   (response) => response.json().then(
+        //     (json) => console.log('Job status: ', json)
+        //   )
+        // )
       })
     }, (error) => dispatch(showAlert('danger', 'Failed to import file', error.message)))
   }
