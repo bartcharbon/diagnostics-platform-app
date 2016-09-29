@@ -32,15 +32,17 @@ export function fetchGeneNetworkScores (phenotype) {
       .then((json) => {
         const scores = {}
         if (json.items.length === 0) {
-          dispatch(showAlert('warning', 'No Gene Network scores were found for phenotype[' + phenotype.name + '(' + phenotype.primaryID + ')]', 'Unable to determine gene priority order'))
+          dispatch(showAlert('warning', 'No Gene Network scores were found for phenotype[' +
+              phenotype.name + '(' + phenotype.primaryID + ')]', 'Unable to determine gene priority order'))
         }
         json.items.forEach(function (score) {
           const geneID = score.hugo
-          if(scores.hasOwnProperty(geneID)){
+          if (scores.hasOwnProperty(geneID)) {
             console.log(scores)
-            dispatch(showAlert('warning', 'More than one Gene Network score found for combination of gene[' + geneID + ')] and phenotype[' + phenotype.primaryID + ')]', ''))
-            scores[geneID] = undefined;
-          }else {
+            dispatch(showAlert('warning', 'More than one Gene Network score found for combination of gene[' +
+                geneID + ')] and phenotype[' + phenotype.primaryID + ')]', ''))
+            scores[geneID] = undefined
+          } else {
             scores[geneID] = score.score
           }
         })
