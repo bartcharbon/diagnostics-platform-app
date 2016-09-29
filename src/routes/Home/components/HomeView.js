@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import UploadFormContainer from 'containers/UploadFormContainer'
-import { submitForm } from 'redux/modules/MolgenisApi'
 
 const propTypes = {
   token : PropTypes.string
