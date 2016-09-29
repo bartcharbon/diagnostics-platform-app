@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { FormControl, Button } from 'react-bootstrap'
+import { FormControl, Button, ProgressBar } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { importFile } from 'redux/modules/ImportFile'
 
@@ -19,7 +19,7 @@ class UploadForm extends Component {
       setFile,
       warning,
       showNameField,
-      fileName,
+      entityName,
       setEntityName,
       showSubmit,
       disableSubmit,
@@ -33,7 +33,8 @@ class UploadForm extends Component {
             {warning && <span className='help-block'>{warning}</span>}
           </div>
           {showNameField &&
-            <FormControl key='name' type='text' value={fileName} placeholder='Entity name' onChange={setEntityName} />}
+            <FormControl key='name' type='text' value={entityName}
+              placeholder='Entity name' onChange={setEntityName} />}
           {showSubmit &&
             <div className='form-group' key='submit'>
               <Button bsStyle='default' onClick={(e) => { e.preventDefault(); onSubmit() }} disabled={disableSubmit}>
@@ -50,7 +51,7 @@ UploadForm.propTypes = {
   setFile       : PropTypes.func,
   warning       : PropTypes.string,
   showNameField : PropTypes.bool,
-  fileName      : PropTypes.string,
+  entityName    : PropTypes.string,
   setEntityName : PropTypes.func,
   showSubmit    : PropTypes.bool,
   disableSubmit : PropTypes.bool,
@@ -73,8 +74,8 @@ class UploadFormContainer extends Component {
     // Initial state
     this.state = {
       file          : null,
+      entityName    : '',
       showNameField : false,
-      fileName      : null,
       action        : 'ADD'
     }
   }
@@ -86,43 +87,53 @@ class UploadFormContainer extends Component {
     if (this.props.validExtensions && !this.props.validExtensions.find((extension) => fileName.endsWith(extension))) {
       this.setState({ warning : 'Invalid file name, extension must be ' + this.props.validExtensions })
     } else {
+      let entityName = null
       if (showNameField) {
         // Remove extension
-        fileName = fileName.replace(/\.vcf|\.vcf\.gz/, '')
+        entityName = fileName.replace(/\.vcf|\.vcf\.gz/, '')
         // Maximum length is 30 chars, but we need to take into account that the samples are post fixed "_SAMPLES"
-        fileName = fileName.substring(0, 21)
+        entityName = entityName.substring(0, 21)
         // Remove illegal chars
-        fileName = fileName.replace(/-|\.|\*|\$|&|%|\^|\(|\)|#|!|@|\?/g, '_')
+        entityName = entityName.replace(/-|\.|\*|\$|&|%|\^|\(|\)|#|!|@|\?/g, '_')
         // Don't allow entity names starting with a number
-        fileName = fileName.replace(/^[0-9]/g, '_')
-        this.setState({ fileName })
+        entityName = entityName.replace(/^[0-9]/g, '_')
       }
-      this.setState({ file, showNameField, warning : undefined })
+      this.setState({ file, showNameField, entityName, warning : undefined })
     }
   }
 
-  setEntityName (fileName) {
-    this.setState({ fileName : fileName.value })
+  setEntityName (entityName) {
+    console.log('setEntityname', entityName)
+    this.setState({ entityName : entityName.value })
   }
 
   onSubmit () {
     const data = new FormData()
     data.append('file', this.state.file)
-    data.append('entityName', this.state.fileName)
+    data.append('entityName', this.state.entityName)
     data.append('action', this.state.action)
     data.append('notify', false)
     this.props.importFile(data)
   }
 
   render () {
-    return <UploadForm gridWidth={this.props.width ? 'col-md-' + this.props.width : 'col-md-12'}
-      setFile={this.setFile}
-      setEntityName={this.setEntityName}
-      showSubmit={this.state.file}
-      disableSubmit={this.state.showNameField && !this.state.fileName}
-      onSubmit={this.onSubmit}
-      {...this.state}
-    />
+    const { width, job } = this.props
+    if (job) {
+      return <ProgressBar min={0} max={1} now={1}
+        striped
+        label={job.message || 'importing...'}
+        active
+        bsStyle='info' />
+    } else {
+      return <UploadForm gridWidth={width ? 'col-md-' + width : 'col-md-12'}
+        setFile={this.setFile}
+        setEntityName={this.setEntityName}
+        showSubmit={this.state.file}
+        disableSubmit={this.state.showNameField && !this.state.entityName}
+        onSubmit={this.onSubmit}
+        {...this.state}
+      />
+    }
   }
 }
 UploadFormContainer.propTypes = { ...propTypes, importFile : PropTypes.func }
@@ -130,6 +141,6 @@ UploadFormContainer.propTypes = { ...propTypes, importFile : PropTypes.func }
 /**
  * Then connect it to the dispatcher
  */
-const mapStateToProps = (state, ownProps) => (ownProps)
+const mapStateToProps = (state, ownProps) => ({ ...ownProps, job : state.importFile.job })
 const mapDispatchToProps = { importFile }
 export default connect(mapStateToProps, mapDispatchToProps)(UploadFormContainer)

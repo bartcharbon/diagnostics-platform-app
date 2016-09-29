@@ -9,17 +9,38 @@ export const constants = { START_IMPORT, UPDATE_JOB }
 // Action Creators
 export function importFile (file) {
   return (dispatch, getState) => {
+    dispatch(updateJob(null))
     const token = getState().session.token
     submitForm('http://localhost:8080/plugin/importwizard/importFile', 'post', file, token).then((response) => {
       response.json().then(jobHref => {
         dispatch(startImport(jobHref))
-        // get(getState().session.server, jobHref, token).then(
-        //   (response) => response.json().then(
-        //     (json) => console.log('Job status: ', json)
-        //   )
-        // )
+        dispatch(fetchJob(jobHref))
       })
     }, (error) => dispatch(showAlert('danger', 'Failed to import file', error.message)))
+  }
+}
+
+export function fetchJob (jobHref) {
+  return (dispatch, getState) => {
+    const interval = setInterval(() => {
+      console.log('fetching job state...')
+      const { server, token } = getState().session
+      get(server, '..' + jobHref, token)
+        .then((job) => {
+          if (job.status === 'FINISHED') {
+            clearInterval(interval)
+            dispatch(showAlert('info', 'Import succeeded', job.importedEntities))
+            dispatch(updateJob(null))
+            // TODO: go to screen 2, but for which of them?
+          } else if (job.status === 'FAILED') {
+            clearInterval(interval)
+            dispatch(showAlert('warning', 'Import failed.', job.message))
+            dispatch(updateJob(null))
+          } else {
+            dispatch(updateJob(job))
+          }
+        })
+    }, 1000)
   }
 }
 
