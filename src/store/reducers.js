@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { routerReducer as router } from 'react-router-redux'
 import session from 'redux/modules/Session'
 import alerts from 'redux/modules/Alerts'
+import importFile from 'redux/modules/ImportFile'
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
@@ -9,6 +10,7 @@ export const makeRootReducer = (asyncReducers) => {
     router,
     session,
     alerts,
+    importFile,
     ...asyncReducers
   })
 }

@@ -1,15 +1,22 @@
-import React from 'react'
-import DuckImage from '../assets/Duck.jpg'
-import classes from './HomeView.scss'
+import React, { PropTypes } from 'react'
+import UploadFormContainer from 'containers/UploadFormContainer'
 
-export const HomeView = () => (
-  <div>
+const propTypes = {
+  token : PropTypes.string
+}
+
+export const HomeView = (props) => {
+  return <div>
     <h4>Welcome!</h4>
-    <img
-      alt='This is a duck, because Redux!'
-      className={classes.duck}
-      src={DuckImage} />
+    <p>Upload your VCF file with gene annotations</p>
+    <UploadFormContainer
+      width={'12'}
+      showAction={false}
+      validExtensions={['vcf', 'xlsx', 'xls', 'vcf.gz']}
+    />
   </div>
-)
+}
+
+HomeView.propTypes = propTypes
 
 export default HomeView

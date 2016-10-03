@@ -77,7 +77,6 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Selectors
 // ------------------------------------
-// TODO sort variants in state based on scores
 
 // ------------------------------------
 // Reducer

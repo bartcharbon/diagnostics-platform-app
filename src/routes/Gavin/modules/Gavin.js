@@ -76,6 +76,7 @@ export function sortVariants (item1, item2) {
   if (value2 < value1) return -1
   return 0
 }
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------

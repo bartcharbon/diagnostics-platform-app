@@ -1,20 +1,36 @@
 import fetch from 'isomorphic-fetch'
 
-const contentHeaders = {
+const jsonContentHeaders = {
   'Accept'       : 'application/json',
   'Content-Type' : 'application/json'
+}
+
+export function submitForm (url, method, formData, token) {
+  const settings = {
+    method : method,
+    body   : formData
+  }
+  if (token) {
+    // for cross-origin requests, use a molgenis token
+    settings.headers = { ...settings.headers, 'x-molgenis-token' : token }
+    settings.mode = 'cors'
+  } else {
+    // for same origin requests, use the JSESSIONID cookie
+    settings.credentials = 'same-origin'
+  }
+  return fetch(url, settings)
 }
 
 function callApi (server, uri, method, token) {
   const url = server.apiUrl + uri
   const settings = {
     method  : method,
-    headers : contentHeaders
+    headers : jsonContentHeaders
   }
 
   if (token) {
     // for cross-origin requests, use a molgenis token
-    settings.headers = { ...contentHeaders, 'x-molgenis-token' : token }
+    settings.headers = { ...jsonContentHeaders, 'x-molgenis-token' : token }
   } else {
     // for same origin requests, use the JSESSIONID cookie
     settings.credentials = 'same-origin'
@@ -38,7 +54,7 @@ export function get (server, uri, token) {
 export function login (server, username, password) {
   return fetch(server.apiUrl + 'v1/login', {
     method  : 'post',
-    headers : contentHeaders,
+    headers : jsonContentHeaders,
     body    : JSON.stringify({ username : username, password : password })
   }).then(response => response.json())
 }
@@ -46,7 +62,7 @@ export function login (server, username, password) {
 export function logout (server, token) {
   return fetch(server.apiUrl + 'v1/logout', {
     method  : 'get',
-    headers : { ...contentHeaders, 'x-molgenis-token' : token }
+    headers : { ...jsonContentHeaders, 'x-molgenis-token' : token }
   })
 }
 
