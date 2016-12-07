@@ -11,7 +11,7 @@ class SelectedPhenotypes extends Component {
   render () {
     const { phenotypes, togglePhenotype, removePhenotype } = this.props
     return <div>
-      Selected phenotypes:
+      <b>Selected phenotypes:</b>
       <form>
         <FormGroup>
           {phenotypes.map((pheno, index) => <span key={index}><Checkbox inline checked={pheno.active}

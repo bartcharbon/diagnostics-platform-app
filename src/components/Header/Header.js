@@ -7,13 +7,6 @@ export const Header = () => (
   <div>
     <AlertsContainer />
     <h1>Genetics Diagnostics App</h1>
-    <IndexLink to='/' activeClassName={classes.activeRoute}>
-      Home
-    </IndexLink>
-    {' · '}
-    <Link to='/gavin/patient_zero' activeClassName={classes.activeRoute}>
-      Gavin
-    </Link>
   </div>
 
 )

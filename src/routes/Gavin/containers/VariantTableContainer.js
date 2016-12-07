@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import { getVariantsSortedOnScore } from '../modules/Gavin'
+import { showAlert } from 'redux/modules/Alerts'
 
 // ------------------------------------
 // Presentation components
@@ -13,8 +14,6 @@ const propTypes = {
 class VariantTable extends Component {
   render () {
     return (
-      <div>
-        <hr />
         <BootstrapTable ref='table' data={this.props.variants}>
           <TableHeaderColumn dataField='identifier' hidden isKey>identifier</TableHeaderColumn>
           <TableHeaderColumn dataField='#CHROM'>Chromosome</TableHeaderColumn>
@@ -22,9 +21,8 @@ class VariantTable extends Component {
           <TableHeaderColumn dataField='REF'>Reference allele</TableHeaderColumn>
           <TableHeaderColumn dataField='ALT'>Alternative allele</TableHeaderColumn>
           <TableHeaderColumn dataField='Gene'>HGNC Gene</TableHeaderColumn>
-          <TableHeaderColumn dataField='totalScore'>Score</TableHeaderColumn>
+          <TableHeaderColumn width='250' dataField='Gavin'>Gavin</TableHeaderColumn>
         </BootstrapTable>
-      </div>
     )
   }
 }
@@ -35,7 +33,8 @@ VariantTable.propTypes = propTypes
 // Container / Presentation wrapping
 // ------------------------------------
 const mapStateToProps = (state) => {
-  return { variants : getVariantsSortedOnScore(state.gavin) }
+  var variants = getVariantsSortedOnScore(state.gavin)
+  return { variants : variants }
 }
 
 const mapDispatchToProps = {}

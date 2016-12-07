@@ -35,8 +35,7 @@ class PhenotypeSelection extends Component {
     const { getQuery, phenotypes } = this.props
     return (
       <div>
-        {phenotypes && <SelectedPhenotypes {...this.props} /> }
-
+        Select the phenotypes for the patient:
         <EntitySelectBoxContainer
           entityName={'sys_ont_OntologyTerm'}
           getQuery={getQuery}
@@ -46,6 +45,8 @@ class PhenotypeSelection extends Component {
             {pheno.value.synonyms && <small><br />{ pheno.value.synonyms.join(', ')}</small>}
           </span>}
           {...this.props} />
+
+        {phenotypes && <SelectedPhenotypes {...this.props} /> }
       </div>
     )
   }

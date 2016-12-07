@@ -1,7 +1,10 @@
 import { combineReducers } from 'redux'
-import phenotypes, * as fromPhenotypes from './PhenotypeSelection'
+import phenotypes from './PhenotypeSelection'
+import * as fromPhenotypes from './PhenotypeSelection'
 import scores from './GeneNetworkScore'
-import entities, * as fromVariants from './Variants'
+import entities from './Variants'
+import * as fromVariants from './Variants'
+import { showAlert } from 'redux/modules/Alerts'
 
 // ------------------------------------
 // Constants

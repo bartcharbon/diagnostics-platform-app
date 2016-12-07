@@ -28,14 +28,8 @@ export function fetchVariants (entityName) {
     const { server, token } = getState().session
     return get(server, `v2/${entityName}`, token).then((json) => {
       var attrNames = json.meta.attributes.map(function (attr) { return attr.name })
-      // FIXME: cope with compounds? or wait for one dimensionial attributeslist
-      var missing = ['#CHROM', 'POS', 'REF', 'ALT', 'Gene'].filter(function (attr) {
-        return attrNames.indexOf(attr) === -1
-      })
-      if (missing.length > 0) {
-        dispatch(showAlert('danger', 'Entity [' +
-            entityName + '] is missing required attributes', missing.join(', ')))
-      }
+      var missing = ['#CHROM', 'POS', 'REF', 'ALT', 'Gene', 'Gavin'].filter(function (attr) {return attrNames.indexOf(attr) === -1})
+      if (missing.length > 0) dispatch(showAlert('danger', 'Entity [' + entityName + '] is missing required attributes', missing.join(', ')))
       const variants = json.items
       dispatch(setVariants(variants))
     }).catch((error) => {
@@ -43,8 +37,7 @@ export function fetchVariants (entityName) {
       if (error.errors[0] !== undefined) {
         message = error.errors[0].message
       }
-      dispatch(showAlert('danger', 'Error retrieving entity[' + entityName +
-          '] from the server', message))
+      dispatch(showAlert('danger', 'Error retrieving entity[' + entityName + '] from the server', message))
     })
   }
 }
